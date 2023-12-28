@@ -1,13 +1,43 @@
 // array of rock, paper, and scissor
 let arr = ['rock', 'paper', 'scissors'];
 
-// counter for number of wins
-let userWin;
-let computerWin;
+let userWin = 0;
+let computerWin = 0;
+let gameCount = 1;
 
-//  variable for number of games played
-let gameCount;
+// event listeners
+const rock = document.querySelector("#rock");
+const paper = document.querySelector("#paper");
+const scissors = document.querySelector("#scissors");
+const div = document.querySelector("#result");
+const reset = document.querySelector("#reset");
 
+rock.addEventListener('click', () => {
+    playerSelection = rock.id;
+    game();
+});
+
+paper.addEventListener('click', () => {
+    playerSelection = paper.id;
+    game();
+});
+
+scissors.addEventListener('click', () => {
+    playerSelection = scissors.id;
+    game();
+});
+
+reset.addEventListener('click', () => {
+    let pNodeList = document.querySelectorAll("p, h1");
+    pNodeList.forEach((pElem) => pElem.remove(pElem))
+    userWin = 0;
+    computerWin = 0;
+    gameCount = 1;
+
+    rock.disabled = false;
+    paper.disabled = false;
+    scissors.disabled = false;
+});
 // getComputerChoice function
 function getComputerChoice() {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -29,67 +59,115 @@ function playRound(playerSelection, computerSelection) {
     if (playerSelection === arr[0] && computerSelection === arr[2]) {
         userWin++;
         gameCount++;
-        console.log(`You Win! ${arr[0].slice(0, 1).toUpperCase().concat(arr[0].slice(1))} beats ${arr[2].slice(0, 1).toUpperCase().concat(arr[2].slice(1))}`);
+        let p = document.createElement("p");
+        p.textContent = `You Win! ${arr[0].slice(0, 1).toUpperCase().concat(arr[0].slice(1))} beats ${arr[2].slice(0, 1).toUpperCase().concat(arr[2].slice(1))}`;
+        div.appendChild(p);
     }
     if (playerSelection === arr[2] && computerSelection === arr[0]) {
         computerWin++;
         gameCount++;
-        console.log(`You Lose! ${arr[0].slice(0, 1).toUpperCase().concat(arr[0].slice(1))} beats ${arr[2].slice(0, 1).toUpperCase().concat(arr[2].slice(1))}`);
+
+        let p = document.createElement("p");
+        p.textContent = `You Lose! ${arr[0].slice(0, 1).toUpperCase().concat(arr[0].slice(1))} beats ${arr[2].slice(0, 1).toUpperCase().concat(arr[2].slice(1))}`;
+        div.appendChild(p);
+
     }
     // R vs P = P
     if (playerSelection === arr[0] && computerSelection === arr[1]) {
         computerWin++;
         gameCount++;
-        console.log(`You Lose! ${arr[1].slice(0, 1).toUpperCase().concat(arr[1].slice(1))} beats ${arr[0].slice(0, 1).toUpperCase().concat(arr[0].slice(1))}`);
+
+        let p = document.createElement("p");
+        p.textContent = `You Lose! ${arr[1].slice(0, 1).toUpperCase().concat(arr[1].slice(1))} beats ${arr[0].slice(0, 1).toUpperCase().concat(arr[0].slice(1))}`;
+        div.appendChild(p);
     }
     if (playerSelection === arr[1] && computerSelection === arr[0]) {
         userWin++;
         gameCount++;
-        console.log(`You Win! ${arr[1].slice(0, 1).toUpperCase().concat(arr[1].slice(1))} beats ${arr[0].slice(0, 1).toUpperCase().concat(arr[0].slice(1))}`);
+
+        let p = document.createElement("p");
+        p.textContent = `You Win! ${arr[1].slice(0, 1).toUpperCase().concat(arr[1].slice(1))} beats ${arr[0].slice(0, 1).toUpperCase().concat(arr[0].slice(1))}`;
+        div.appendChild(p);
     }
     // P vs S = S
     if (playerSelection === arr[1] && computerSelection === arr[2]) {
         computerWin++;
         gameCount++;
-        return `You Lose! ${arr[2].slice(0, 1).toUpperCase().concat(arr[2].slice(1))} beats ${arr[1].slice(0, 1).toUpperCase().concat(arr[1].slice(1))}`;
+
+        let p = document.createElement("p");
+        p.textContent = `You Lose! ${arr[2].slice(0, 1).toUpperCase().concat(arr[2].slice(1))} beats ${arr[1].slice(0, 1).toUpperCase().concat(arr[1].slice(1))}`;
+        div.appendChild(p);
+
     }
     if (playerSelection === arr[2] && computerSelection === arr[1]) {
         userWin++;
         gameCount++;
-        console.log(`You Win! ${arr[2].slice(0, 1).toUpperCase().concat(arr[2].slice(1))} beats ${arr[1].slice(0, 1).toUpperCase().concat(arr[1].slice(1))}`);
+        let p = document.createElement("p");
+        p.textContent = `You Win! ${arr[2].slice(0, 1).toUpperCase().concat(arr[2].slice(1))} beats ${arr[1].slice(0, 1).toUpperCase().concat(arr[1].slice(1))}`;
+        div.appendChild(p);
     }
     // same selection = No Winner! Tie
-    else {
-        while (playerSelection === computerSelection) {
-            console.log(`No Victor! No Vanquished!\nPlayer = ${playerSelection} and Computer = ${computerSelection}`);
-            playerSelection = prompt("Make a choice: ", "Rock");
-            computerSelection = getComputerChoice();
-            return playRound(playerSelection, computerSelection);
-        }
+    else if (playerSelection === computerSelection) {
+        userWin++;
+        computerWin++;
+        gameCount++;
+
+        let p = document.createElement("p");
+        p.innerHTML = `No Victor! No Vanquished!<br>Player = ${playerSelection} and Computer = ${computerSelection}`;
+        div.appendChild(p);
     }
 }
 
 // game function: play 5 rounds of game
 function game() {
-    // for every new game, initialize this values to 0
-    userWin = 0;
-    computerWin = 0;
-    gameCount = 0;
+    computerSelection = getComputerChoice();
+    let h1 = document.createElement("h1");
+    h1.textContent = `Game Count: ${gameCount}`;
+    div.appendChild(h1);
+    playRound(playerSelection, computerSelection);
 
-    let count = 1;
-    while (count <= 5) {
-        playerSelection = getPlayerChoice();
-        computerSelection = getComputerChoice();
-        console.log("game count: ", count);
-        playRound(playerSelection, computerSelection);
-        count++;
-    }
+    displayScore();
+}
 
-    if (userWin > computerWin) {
-        console.log(`***Game Score***\n`);
-        console.log(`\nYou Win! Player = ${userWin} vs Computer = ${computerWin}`);
-    } else if (userWin < computerWin) {
-        console.log(`***Game Score***\n`);
-        console.log(`\nYou Lose! Player = ${userWin} vs Computer = ${computerWin}`);
+function displayScore() {
+    if (userWin === 5 || computerWin === 5) {
+        if (userWin > computerWin) {
+            let h1 = document.createElement("h1");
+            h1.style.color = 'blue';
+            h1.textContent = `***Game Score***`;
+            div.appendChild(h1);
+
+            let p1 = document.createElement("p");
+            p1.textContent = `You Win! Player = ${userWin} vs Computer = ${computerWin}`;
+            div.appendChild(p1);
+
+        } else if (userWin < computerWin) {
+
+            let h1 = document.createElement("h1");
+            h1.textContent = `***Game Score***`;
+            h1.style.color = 'blue';
+            div.appendChild(h1);
+
+            let p1 = document.createElement("p");
+            p1.textContent = `You Lose! Player = ${userWin} vs Computer = ${computerWin}`;
+            div.appendChild(p1);
+        } else {
+
+            let h1 = document.createElement("h1");
+            h1.textContent = `***Game Score***`;
+            h1.style.color = 'blue';
+            div.appendChild(h1);
+
+            let p1 = document.createElement("p");
+            p1.textContent = `Tie! Player = ${userWin} vs Computer = ${computerWin}`;
+            div.appendChild(p1);
+        }
+
+        // disable the game buttons
+        // this forces the player to reset the game
+        rock.disabled = true;
+        paper.disabled = true;
+        scissors.disabled = true;
+
     }
 }
