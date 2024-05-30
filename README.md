@@ -1,3 +1,5 @@
+# Rock Paper Scissors Game
+
 This project makes use of JavaScript to simulate [Rock Paper Scissors game](https://en.wikipedia.org/wiki/Rock_paper_scissors).
 
 ---
